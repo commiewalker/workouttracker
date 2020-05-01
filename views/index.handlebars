@@ -1,0 +1,52 @@
+<h2>Tracking workouts!</h2>
+
+
+<button id="btnAddWorkout">Add a new workout!</button>
+<form id="formWorkout" class="hide">
+    <input type="text" id="woName" name="woName" placeholder="Work out name">
+    <input type="submit" id="btnWOSubmit" name="btnWOSubmit" value="Add Work out">
+</form>
+
+<h3>Most recent workout</h3>
+<div class="card text-center">
+    <h4> {{woName}} </h4>
+    <h5> {{woDate}} </h5>
+
+    <button id="btnInfo">see Exercises</button>
+    {{#each exercise }}
+    <div class="card-deck current hide">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">{{name}}</h5>
+                <p class="card-text">Type: {{type}} <br> Duration: {{duration}} </p>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    <button id="btnAddExcerise">add exercise to this workout</button>
+<form id="formExcercise" class="hide">
+    <input type="text" id="exName" name="exName" placeholder="exercise name">
+    <input type="text" id="exType" name="exType" placeholder="exercise type">
+    <input type="text" id="exDuration" name="exDuration" placeholder="duration">
+    <input type="submit" id="btnXSubmit" name="btnXSubmit" value="Add exercise">
+</form>
+</div>
+
+
+<h3>previous workout</h3>
+<button id="btnInfoP">see Exercises</button>
+<div class="card text-center previous hide">
+    <h4> {{woNameP}} </h4>
+    <h5> {{woDateP}} </h5>
+   
+    {{#each exerciseP }}
+    <div class="card-deck">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">{{name}}</h5>
+                <p class="card-text">Type: {{type}} <br> Duration: {{duration}} </p>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>
