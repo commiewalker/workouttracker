@@ -29,15 +29,20 @@ app.get("/", function (req, res) {
   db.Workout.find().sort({_id:-1}).lean()
     .populate("exercise")
     .then(workOutData => {
-      const hbsObject = {
-        woName: workOutData[0].name,
-        woDate: workOutData[0].date,
-        exercise: workOutData[0].exercise,
-        woNameP: workOutData[1].name,
-        woDateP: workOutData[1].date,
-        exerciseP: workOutData[1].exercise
-      };
-      res.render("index",hbsObject)
+
+      if (workOutData){
+        const hbsObject = {
+          woName: workOutData[0].name,
+          woDate: workOutData[0].date,
+          exercise: workOutData[0].exercise,
+          woNameP: workOutData[1].name,
+          woDateP: workOutData[1].date,
+          exerciseP: workOutData[1].exercise
+        };
+        res.render("index",hbsObject)
+      }
+
+      res.render("index");
     })
     .catch(err => {
       console.log(err);
