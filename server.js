@@ -19,8 +19,8 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workouttrackerdb", { useNewUrlParser: true });
-//mongoose.connect(process.env.MONGODB_URI || "mongodb://user1:password1@ds129085.mlab.com:29085/heroku_zzlf848h", { useNewUrlParser: true });
+//mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workouttrackerdb", { useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI || "mongodb://user1:password1@ds129085.mlab.com:29085/heroku_zzlf848h", { useMongoClient: true });
 
 app.get("/", function (req, res) {
   db.Workout.find().sort({_id:-1}).lean()
