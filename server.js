@@ -29,8 +29,8 @@ app.get("/", function (req, res) {
   db.Workout.find().sort({_id:-1}).lean()
     .populate("exercise")
     .then(workOutData => {
-
-      if (workOutData){
+      console.log(workOutData);
+      if (workOutData.length > 0){
         const hbsObject = {
           woName: workOutData[0].name,
           woDate: workOutData[0].date,
@@ -40,14 +40,16 @@ app.get("/", function (req, res) {
           exerciseP: workOutData[1].exercise
         };
         res.render("index",hbsObject)
-      }
+      } else  res.render("index");
 
-      res.render("index");
+     
     })
-    .catch(err => {
-      console.log(err);
-      res.json(err);
-    });
+    // .catch(err => {
+    //   console.log(err);
+    //   res.json(err);
+    // });
+
+    
 })
 
 app.post("/workout", ({body}, res) => {
