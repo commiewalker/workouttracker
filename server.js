@@ -21,16 +21,21 @@ app.use(express.static("public"));
 
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workouttrackerdb", { useNewUrlParser: true });
-//mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workouttrackerdb");
-
-//mongoose.connect(process.env.MONGODB_URI || "mongodb://user1:password1@ds129085.mlab.com:29085/heroku_zzlf848h", { useMongoClient: true });
 
 app.get("/", function (req, res) {
-  db.Workout.find().sort({_id:-1}).lean()
+  db.Workout.find().sort({ _id: -1 }).lean()
     .populate("exercise")
     .then(workOutData => {
       console.log(workOutData);
-      if (workOutData.length > 0){
+
+      if (workOutData.length === 1) {
+        const hbsObject = {
+          woName: workOutData[0].name,
+          woDate: workOutData[0].date,
+          exercise: workOutData[0].exercise
+        };
+        res.render("index", hbsObject)
+      } else if (workOutData.length > 1 ) {
         const hbsObject = {
           woName: workOutData[0].name,
           woDate: workOutData[0].date,
@@ -39,21 +44,21 @@ app.get("/", function (req, res) {
           woDateP: workOutData[1].date,
           exerciseP: workOutData[1].exercise
         };
-        res.render("index",hbsObject)
-      } else  res.render("index");
+        res.render("index", hbsObject)
+      } else res.render("index");
 
-     
+
     })
-    // .catch(err => {
-    //   console.log(err);
-    //   res.json(err);
-    // });
+    .catch(err => {
+      console.log(err);
+      res.json(err);
+    });
 
-    
+
 })
 
-app.post("/workout", ({body}, res) => {
-  db.Workout.create(body)  
+app.post("/workout", ({ body }, res) => {
+  db.Workout.create(body)
     .then(newWO => {
       res.redirect("/");
     })
@@ -62,20 +67,20 @@ app.post("/workout", ({body}, res) => {
     });
 });
 
-app.post("/exercise", ({body}, res) => {
-  db.Workout.find().sort({_id:-1})  // GET last item
-  .then(recentWO => {         
+app.post("/exercise", ({ body }, res) => {
+  db.Workout.find().sort({ _id: -1 })  // GET last item
+    .then(recentWO => {
 
-    db.Exercise.create(body)
-    .then(({_id}) => db.Workout.findOneAndUpdate({ name: recentWO[0].name }, { $push: {exercise: _id} } , { new: true }))
-    .then(newX => {
-      res.redirect("/");
+      db.Exercise.create(body)
+        .then(({ _id }) => db.Workout.findOneAndUpdate({ name: recentWO[0].name }, { $push: { exercise: _id } }, { new: true }))
+        .then(newX => {
+          res.redirect("/");
+        })
+        .catch(({ message }) => {
+          res.json(message)
+        });
     })
-    .catch(({ message }) => {
-      res.json(message)
-    });
-  })
-      
+
 
 })
 
